@@ -10,6 +10,8 @@ class User < ApplicationRecord
   # password_confirmation :string
   has_secure_password
 
+  has_many :photos, dependent: :destroy
+
   normalizes :email, with: ->(e) { e.strip.downcase }
 
   validates :email, presence: true
