@@ -3,16 +3,8 @@ Rails.application.routes.draw do
 
   get    "/login",  to: "sessions#new",     as: :login
   post   "/login",  to: "sessions#create"
-  delete "/logout", to: "sessions#destroy", as: :logout
 
-  resources :photos, only: [:index, :new, :create] do
-    member do
-      post :tweet
-    end
-  end
-
-  get  "/oauth/authorize", to: "oauth#authorize", as: :oauth_authorize
-  get  "/oauth/callback",  to: "oauth#callback",  as: :oauth_callback
+  resources :photos, only: [ :index ]
 
   get "up" => "rails/health#show", as: :rails_health_check
 end
