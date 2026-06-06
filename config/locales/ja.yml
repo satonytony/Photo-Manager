@@ -1,0 +1,21 @@
+ja:
+  activerecord:
+    models:
+      photo: 写真
+    attributes:
+      photo:
+        title: タイトル
+        image: 画像ファイル
+    errors:
+      models:
+        photo:
+          attributes:
+            title:
+              blank: を入力してください
+              too_long: は%{count}文字以内で入力してください
+            image:
+              blank: を選択してください
+  errors:
+    messages:
+      blank: を入力してください
+      too_long: は%{count}文字以内で入力してください

@@ -1,11 +1,17 @@
 <h1>写真一覧</h1>
 
-<%= link_to "写真をアップロード", new_photo_path %>
-<%= button_to "ログアウト", "/logout", method: :delete %>
+<div class="photos-toolbar">
+  <%= link_to "写真をアップロード", new_photo_path %>
+  <%= button_to "ログアウト", "/logout", method: :delete %>
+</div>
 
-<% @photos.each do |photo| %>
-  <div>
-    <p><%= photo.title %></p>
-    <%= image_tag photo.image if photo.image.attached? %>
-  </div>
-<% end %>
+<div class="photos-grid">
+  <% @photos.each do |photo| %>
+    <div class="photo-card">
+      <% if photo.image.attached? %>
+        <%= image_tag photo.image, class: "photo-card__image" %>
+      <% end %>
+      <p class="photo-card__title"><%= photo.title %></p>
+    </div>
+  <% end %>
+</div>
