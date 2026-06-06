@@ -10,12 +10,11 @@ ja:
       models:
         photo:
           attributes:
-            title:
-              blank: を入力してください
-              too_long: は%{count}文字以内で入力してください
             image:
               blank: を選択してください
-  errors:
-    messages:
-      blank: を入力してください
-      too_long: は%{count}文字以内で入力してください
+
+  sessions:
+    errors:
+      email_blank: メールアドレスを入力してください
+      password_blank: パスワードを入力してください
+      invalid_credentials: メールアドレスとパスワードが一致するユーザーが存在しません
