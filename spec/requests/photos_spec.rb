@@ -3,10 +3,8 @@ require 'rails_helper'
 RSpec.describe "Photos", type: :request do
   describe "GET /photos" do
     context "未ログイン状態のとき" do
-      it "ログイン画面にリダイレクトする" do
-        get photos_path
-        expect(response).to redirect_to(login_path)
-      end
+      let(:target_path) { photos_path }
+      it_behaves_like "ログイン必須"
     end
 
     context "ログイン済みのとき" do
