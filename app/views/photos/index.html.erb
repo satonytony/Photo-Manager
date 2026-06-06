@@ -1,10 +1,11 @@
 <h1>写真一覧</h1>
 
-<%= link_to "写真をアップロード", "/photos/new" %>
+<%= link_to "写真をアップロード", new_photo_path %>
 <%= button_to "ログアウト", "/logout", method: :delete %>
 
 <% @photos.each do |photo| %>
   <div>
     <p><%= photo.title %></p>
+    <%= image_tag photo.image if photo.image.attached? %>
   </div>
 <% end %>
