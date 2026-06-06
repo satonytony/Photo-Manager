@@ -1,12 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe "Photos", type: :request do
-  describe "GET /photos" do
-    context "未ログイン状態のとき" do
-      let(:target_path) { photos_path }
-      it_behaves_like "ログイン必須"
-    end
+RSpec.describe PhotosController, type: :request do
+  it_behaves_like "ログイン必須"
 
+  describe "GET /photos" do
     context "ログイン済みのとき" do
       let(:user) { create(:user) }
 

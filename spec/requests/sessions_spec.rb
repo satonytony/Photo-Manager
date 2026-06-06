@@ -60,17 +60,4 @@ RSpec.describe "Sessions", type: :request do
       end
     end
   end
-
-  describe "GET /photos（ログイン必須）" do
-    it "未ログイン時はログイン画面にリダイレクトする" do
-      get photos_path
-      expect(response).to redirect_to(login_path)
-    end
-
-    it "ログイン済みの場合は200を返す" do
-      post login_path, params: { email: "test@example.com", password: "password" }
-      get photos_path
-      expect(response).to have_http_status(:ok)
-    end
-  end
 end
