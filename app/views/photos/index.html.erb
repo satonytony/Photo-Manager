@@ -1,3 +1,10 @@
 <h1>写真一覧</h1>
 
-<p>（写真アップロード機能は近日実装）</p>
+<%= link_to "写真をアップロード", "/photos/new" %>
+<%= button_to "ログアウト", "/logout", method: :delete %>
+
+<% @photos.each do |photo| %>
+  <div>
+    <p><%= photo.title %></p>
+  </div>
+<% end %>

@@ -2,6 +2,6 @@ class PhotosController < ApplicationController
   before_action :require_login
 
   def index
-    @photos = []
+    @photos = current_user.photos.order(created_at: :desc)
   end
 end
