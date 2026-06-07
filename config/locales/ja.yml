@@ -18,3 +18,8 @@ ja:
       email_blank: メールアドレスを入力してください
       password_blank: パスワードを入力してください
       invalid_credentials: メールアドレスとパスワードが一致するユーザーが存在しません
+
+  my_tweet:
+    errors:
+      fetch_token_failed: 認証に失敗しました。もう一度お試しください。
+      post_tweet_failed: ツイートの投稿に失敗しました。もう一度お試しください。

@@ -1,6 +1,4 @@
 class OauthController < ApplicationController
-  include MyTweetApiClient
-
   def authorize
     query = {
       response_type: "code",
@@ -14,9 +12,17 @@ class OauthController < ApplicationController
   def callback
     code = params[:code]
     if code.present?
-      token = fetch_access_token(code)
+      token = api_client.fetch_access_token(code)
       session[:access_token] = token if token
     end
     redirect_to photos_path
+  rescue MyTweetApiClient::Error
+    redirect_to photos_path, alert: t("my_tweet.errors.fetch_token_failed")
+  end
+
+  private
+
+  def api_client
+    MyTweetApiClient.new
   end
 end

@@ -1,7 +1,7 @@
 require "net/http"
 
-module MyTweetApiClient
-  extend ActiveSupport::Concern
+class MyTweetApiClient
+  class Error < StandardError; end
 
   def fetch_access_token(code)
     with_http_rescue do
@@ -33,8 +33,7 @@ module MyTweetApiClient
 
   def with_http_rescue
     yield
-  rescue StandardError
-    # TODO: エラー種別に応じたログ記録・ユーザ通知等を整備する
-    nil
+  rescue StandardError => e
+    raise Error, e.message
   end
 end

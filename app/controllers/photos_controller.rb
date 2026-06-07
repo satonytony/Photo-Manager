@@ -1,6 +1,4 @@
 class PhotosController < ApplicationController
-  include MyTweetApiClient
-
   def index
     @photos = current_user.photos.order(created_at: :desc)
   end
@@ -20,12 +18,17 @@ class PhotosController < ApplicationController
   def tweet
     @photo = current_user.photos.find(params[:id])
     image_url = rails_blob_url(@photo.image, host: request.base_url)
-    # TODO: ツイート失敗時（false/nil）はユーザーにエラーを通知する
-    post_tweet(session[:access_token], @photo.title, image_url)
+    api_client.post_tweet(session[:access_token], @photo.title, image_url)
     redirect_to photos_path
+  rescue MyTweetApiClient::Error
+    redirect_to photos_path, alert: t("my_tweet.errors.post_tweet_failed")
   end
 
   private
+
+  def api_client
+    MyTweetApiClient.new
+  end
 
   def photo_params
     params.require(:photo).permit(:title, :image)

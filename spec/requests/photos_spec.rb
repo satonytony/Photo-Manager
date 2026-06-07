@@ -85,7 +85,7 @@ RSpec.describe PhotosController, type: :request do
     let(:photo) { create(:photo, :with_image, user: user) }
 
     context "ツイートが成功するとき" do
-      before { allow_any_instance_of(PhotosController).to receive(:post_tweet).and_return(true) }
+      before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_return(true) }
 
       it "写真一覧にリダイレクトする" do
         post tweet_photo_path(photo)
@@ -94,7 +94,7 @@ RSpec.describe PhotosController, type: :request do
     end
 
     context "ツイートAPIが失敗する（500系）とき" do
-      before { allow_any_instance_of(PhotosController).to receive(:post_tweet).and_return(false) }
+      before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_return(false) }
 
       it "写真一覧にリダイレクトする" do
         post tweet_photo_path(photo)
@@ -103,11 +103,16 @@ RSpec.describe PhotosController, type: :request do
     end
 
     context "ネットワークエラーでツイートが失敗するとき" do
-      before { allow_any_instance_of(PhotosController).to receive(:post_tweet).and_return(nil) }
+      before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_raise(MyTweetApiClient::Error) }
 
       it "写真一覧にリダイレクトする" do
         post tweet_photo_path(photo)
         expect(response).to redirect_to(photos_path)
+      end
+
+      it "エラーメッセージをflashにセットする" do
+        post tweet_photo_path(photo)
+        expect(flash[:alert]).to be_present
       end
     end
   end

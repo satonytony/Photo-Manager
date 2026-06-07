@@ -1,8 +1,7 @@
 require "rails_helper"
 
 RSpec.describe MyTweetApiClient do
-  let(:dummy_class) { Class.new { include MyTweetApiClient } }
-  let(:instance) { dummy_class.new }
+  let(:instance) { MyTweetApiClient.new }
 
   describe "#fetch_access_token" do
     context "2xx レスポンスの場合" do
@@ -33,8 +32,8 @@ RSpec.describe MyTweetApiClient do
     context "ネットワークエラーの場合" do
       before { allow(Net::HTTP).to receive(:post_form).and_raise(SocketError) }
 
-      it "nil を返す" do
-        expect(instance.fetch_access_token("code_abc")).to be_nil
+      it "MyTweetApiClient::Error を raise する" do
+        expect { instance.fetch_access_token("code_abc") }.to raise_error(MyTweetApiClient::Error)
       end
     end
   end
@@ -67,8 +66,8 @@ RSpec.describe MyTweetApiClient do
     context "ネットワークエラーの場合" do
       before { allow_any_instance_of(Net::HTTP).to receive(:request).and_raise(SocketError) }
 
-      it "nil を返す" do
-        expect(instance.post_tweet("token_xyz", "タイトル", "http://localhost:3000/photos/1.jpg")).to be_nil
+      it "MyTweetApiClient::Error を raise する" do
+        expect { instance.post_tweet("token_xyz", "タイトル", "http://localhost:3000/photos/1.jpg") }.to raise_error(MyTweetApiClient::Error)
       end
     end
   end
