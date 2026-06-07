@@ -60,4 +60,21 @@ RSpec.describe "Sessions", type: :request do
       end
     end
   end
+
+  describe "DELETE /logout" do
+    context "ログイン中のユーザーがログアウトする場合" do
+      before { post login_path, params: { email: "test@example.com", password: "password" } }
+
+      it "ログインページにリダイレクトされる" do
+        delete logout_path
+        expect(response).to redirect_to(login_path)
+      end
+
+      it "ログアウト後は写真一覧にアクセスするとログインページへリダイレクトされる" do
+        delete logout_path
+        get photos_path
+        expect(response).to redirect_to(login_path)
+      end
+    end
+  end
 end
