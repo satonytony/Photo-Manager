@@ -1,6 +1,5 @@
 class PhotosController < ApplicationController
   include MyTweetApiClient
-  before_action :require_login
 
   def index
     @photos = current_user.photos.order(created_at: :desc)

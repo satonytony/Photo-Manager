@@ -1,6 +1,5 @@
 class OauthController < ApplicationController
   include MyTweetApiClient
-  before_action :require_login
 
   def authorize
     query = {
