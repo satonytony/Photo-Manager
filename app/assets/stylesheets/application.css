@@ -9,6 +9,10 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
+.error-messages {
+  color: red;
+}
+
 .photos-toolbar {
   display: flex;
   gap: 12px;
