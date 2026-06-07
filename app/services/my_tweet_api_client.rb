@@ -34,6 +34,9 @@ class MyTweetApiClient
   def with_http_rescue
     yield
   rescue StandardError => e
+    # ネットワークエラーや 500 系などの通信エラーを MyTweetApiClient::Error に集約して raise する。
+    # （本来はエラー毎にエラークラス定義して処理してあげたい）
+    # 受け側は application_controller の rescue_from で一元的にハンドリングする。
     raise Error, e.message
   end
 end
