@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_login
+    # TODO: 未ログイン時にリダイレクトする際、ログインが必要であることをユーザーに伝える
     redirect_to login_path unless logged_in?
   end
 end
