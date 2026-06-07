@@ -1,4 +1,5 @@
 class PhotosController < ApplicationController
+  include MyTweetApiClient
   before_action :require_login
 
   def index
@@ -15,6 +16,14 @@ class PhotosController < ApplicationController
     else
       render :new, status: :unprocessable_content
     end
+  end
+
+  def tweet
+    @photo = current_user.photos.find(params[:id])
+    image_url = rails_blob_url(@photo.image, host: request.base_url)
+    # TODO: ツイート失敗時（false/nil）はユーザーにエラーを通知する
+    post_tweet(session[:access_token], @photo.title, image_url)
+    redirect_to photos_path
   end
 
   private

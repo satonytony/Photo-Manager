@@ -38,4 +38,38 @@ RSpec.describe MyTweetApiClient do
       end
     end
   end
+
+  describe "#post_tweet" do
+    context "201 レスポンスの場合" do
+      before do
+        fake_res = double("created_response")
+        allow(fake_res).to receive(:is_a?).with(Net::HTTPCreated).and_return(true)
+        allow_any_instance_of(Net::HTTP).to receive(:request).and_return(fake_res)
+      end
+
+      it "true を返す" do
+        expect(instance.post_tweet("token_xyz", "タイトル", "http://localhost:3000/photos/1.jpg")).to be true
+      end
+    end
+
+    context "201 以外のレスポンスの場合" do
+      before do
+        fake_res = double("error_response")
+        allow(fake_res).to receive(:is_a?).with(Net::HTTPCreated).and_return(false)
+        allow_any_instance_of(Net::HTTP).to receive(:request).and_return(fake_res)
+      end
+
+      it "false を返す" do
+        expect(instance.post_tweet("token_xyz", "タイトル", "http://localhost:3000/photos/1.jpg")).to be false
+      end
+    end
+
+    context "ネットワークエラーの場合" do
+      before { allow_any_instance_of(Net::HTTP).to receive(:request).and_raise(SocketError) }
+
+      it "nil を返す" do
+        expect(instance.post_tweet("token_xyz", "タイトル", "http://localhost:3000/photos/1.jpg")).to be_nil
+      end
+    end
+  end
 end
