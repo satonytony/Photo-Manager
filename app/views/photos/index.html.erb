@@ -15,6 +15,9 @@
         <%= image_tag photo.image, class: "photo-card__image" %>
       <% end %>
       <p class="photo-card__title"><%= photo.title %></p>
+      <% if session[:access_token].present? %>
+        <%= button_to "ツイートする", tweet_photo_path(photo), method: :post %>
+      <% end %>
     </div>
   <% end %>
 </div>

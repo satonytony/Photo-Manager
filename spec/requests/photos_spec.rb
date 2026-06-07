@@ -100,4 +100,21 @@ RSpec.describe PhotosController, type: :request do
       end
     end
   end
+
+  describe "POST /photos/:id/tweet" do
+    let(:user) { create(:user) }
+    let(:photo) { create(:photo, :with_image, user: user) }
+
+    context "ログイン済みのとき" do
+      before do
+        post "/login", params: { email: user.email, password: "password" }
+        allow_any_instance_of(PhotosController).to receive(:post_tweet).and_return(true)
+      end
+
+      it "写真一覧にリダイレクトする" do
+        post tweet_photo_path(photo)
+        expect(response).to redirect_to(photos_path)
+      end
+    end
+  end
 end

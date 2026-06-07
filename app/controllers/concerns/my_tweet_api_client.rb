@@ -17,6 +17,18 @@ module MyTweetApiClient
     end
   end
 
+  def post_tweet(access_token, text, url)
+    with_http_rescue do
+      uri = URI.parse(MY_TWEET[:api_url])
+      req = Net::HTTP::Post.new(uri)
+      req["Content-Type"] = "application/json"
+      req["Authorization"] = "Bearer #{access_token}"
+      req.body = { text: text, url: url }.to_json
+      res = Net::HTTP.start(uri.hostname, uri.port) { |http| http.request(req) }
+      res.is_a?(Net::HTTPCreated)
+    end
+  end
+
   private
 
   def with_http_rescue

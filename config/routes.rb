@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   post   "/login",  to: "sessions#create"
   delete "/logout", to: "sessions#destroy", as: :logout
 
-  resources :photos, only: [ :index, :new, :create ]
+  resources :photos, only: [ :index, :new, :create ] do
+    member { post :tweet }
+  end
 
   get "/oauth/authorize", to: "oauth#authorize", as: :oauth_authorize
   get "/oauth/callback",  to: "oauth#callback",  as: :oauth_callback
