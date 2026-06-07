@@ -84,45 +84,64 @@ RSpec.describe PhotosController, type: :request do
   describe "POST /photos/:id/tweet" do
     let(:photo) { create(:photo, :with_image, user: user) }
 
-    context "ツイートが成功するとき" do
-      before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_return(true) }
+    context "MyTweetと連携済みのとき" do
+      # OAuthコールバックを成功させて session[:access_token] をセットした状態を作る
+      before do
+        fake_res = double("token_response")
+        allow(fake_res).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+        allow(fake_res).to receive(:body).and_return({ access_token: "test_token" }.to_json)
+        allow(Net::HTTP).to receive(:post_form).and_return(fake_res)
+        get oauth_callback_path, params: { code: "dummy_code" }
+      end
 
-      it "写真一覧にリダイレクトする" do
-        post tweet_photo_path(photo)
-        expect(response).to redirect_to(photos_path)
+      context "ツイートが成功するとき" do
+        before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_return(true) }
+
+        it "写真一覧にリダイレクトする" do
+          post tweet_photo_path(photo)
+          expect(response).to redirect_to(photos_path)
+        end
+      end
+
+      context "ツイートAPIが失敗する（500系）とき" do
+        before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_raise(MyTweetApiClient::Error) }
+
+        it "写真一覧にリダイレクトする" do
+          post tweet_photo_path(photo)
+          expect(response).to redirect_to(photos_path)
+        end
+      end
+
+      context "ネットワークエラーでツイートが失敗するとき" do
+        before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_raise(MyTweetApiClient::Error) }
+
+        it "写真一覧にリダイレクトする" do
+          post tweet_photo_path(photo)
+          expect(response).to redirect_to(photos_path)
+        end
+      end
+
+      context "存在しない写真IDを指定したとき" do
+        it "500にならず写真一覧へリダイレクトする" do
+          post tweet_photo_path(id: 0)
+          expect(response).to redirect_to(photos_path)
+        end
+      end
+
+      context "他ユーザーの写真IDを指定したとき" do
+        it "写真一覧へリダイレクトしツイートしない" do
+          other_photo = create(:photo, :with_image, user: create(:user))
+          expect_any_instance_of(MyTweetApiClient).not_to receive(:post_tweet)
+          post tweet_photo_path(other_photo)
+          expect(response).to redirect_to(photos_path)
+        end
       end
     end
 
-    context "ツイートAPIが失敗する（500系）とき" do
-      before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_raise(MyTweetApiClient::Error) }
-
-      it "写真一覧にリダイレクトする" do
-        post tweet_photo_path(photo)
-        expect(response).to redirect_to(photos_path)
-      end
-    end
-
-    context "ネットワークエラーでツイートが失敗するとき" do
-      before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_raise(MyTweetApiClient::Error) }
-
-      it "写真一覧にリダイレクトする" do
-        post tweet_photo_path(photo)
-        expect(response).to redirect_to(photos_path)
-      end
-    end
-
-    context "存在しない写真IDを指定したとき" do
-      it "500にならず写真一覧へリダイレクトする" do
-        post tweet_photo_path(id: 0)
-        expect(response).to redirect_to(photos_path)
-      end
-    end
-
-    context "他ユーザーの写真IDを指定したとき" do
-      it "写真一覧へリダイレクトしツイートしない" do
-        other_photo = create(:photo, :with_image, user: create(:user))
+    context "MyTweetと未連携のとき" do
+      it "ツイートせず写真一覧へリダイレクトする" do
         expect_any_instance_of(MyTweetApiClient).not_to receive(:post_tweet)
-        post tweet_photo_path(other_photo)
+        post tweet_photo_path(photo)
         expect(response).to redirect_to(photos_path)
       end
     end

@@ -25,7 +25,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session[:user_id] = nil
+    # 仕様では未ログイン状態に戻るだけと記載あったが、念のためaccess_tokenも削除する
+    reset_session
     redirect_to login_path
   end
 end

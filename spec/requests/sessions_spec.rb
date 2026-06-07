@@ -75,6 +75,15 @@ RSpec.describe "Sessions", type: :request do
         get photos_path
         expect(response).to redirect_to(login_path)
       end
+
+      it "MyTweetのアクセストークンもセッションから削除される" do
+        allow_any_instance_of(MyTweetApiClient).to receive(:fetch_access_token).and_return("dummy_token")
+        get oauth_callback_path, params: { code: "dummy_code" }
+        expect(session[:access_token]).to eq("dummy_token")
+
+        delete logout_path
+        expect(session[:access_token]).to be_nil
+      end
     end
   end
 end
