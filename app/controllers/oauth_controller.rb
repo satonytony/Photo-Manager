@@ -15,9 +15,6 @@ class OauthController < ApplicationController
       token = api_client.fetch_access_token(code)
       session[:access_token] = token if token
     end
-  rescue MyTweetApiClient::Error
-    # TODO: 素のエラーをそのまま出さないよう、ユーザー向けの適切なエラー表示に変換する必要がある
-  ensure
     redirect_to photos_path
   end
 

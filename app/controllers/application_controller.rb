@@ -2,9 +2,16 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern
   before_action :require_login
 
+  rescue_from MyTweetApiClient::Error, with: :handle_my_tweet_api_error
+
   helper_method :current_user, :logged_in?
 
   private
+
+  def handle_my_tweet_api_error
+    # TODO: 通信エラーが起きたことをユーザーに伝える必要がある
+    redirect_to photos_path
+  end
 
   def current_user
     @current_user ||= User.find_by(id: session[:user_id])
