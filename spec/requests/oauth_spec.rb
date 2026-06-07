@@ -39,8 +39,14 @@ RSpec.describe OauthController, type: :request do
       context "トークン取得にエラーがあった場合" do
         before { allow(Net::HTTP).to receive(:post_form).and_raise(SocketError) }
 
-        it "MyTweetApiClient::Error が raise される" do
-          expect { get oauth_callback_path, params: { code: "auth_code_abc" } }.to raise_error(MyTweetApiClient::Error)
+        it "セッションにアクセストークンをセットしない" do
+          get oauth_callback_path, params: { code: "auth_code_abc" }
+          expect(session[:access_token]).to be_nil
+        end
+
+        it "写真一覧へリダイレクトする" do
+          get oauth_callback_path, params: { code: "auth_code_abc" }
+          expect(response).to redirect_to(photos_path)
         end
       end
     end

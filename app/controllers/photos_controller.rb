@@ -19,10 +19,10 @@ class PhotosController < ApplicationController
     @photo = current_user.photos.find(params[:id])
     image_url = rails_blob_url(@photo.image, host: request.base_url)
     api_client.post_tweet(session[:access_token], @photo.title, image_url)
-    redirect_to photos_path
   rescue MyTweetApiClient::Error
     # TODO: 素のエラーをそのまま出さないよう、ユーザー向けの適切なエラー表示に変換する必要がある
-    raise
+  ensure
+    redirect_to photos_path
   end
 
   private
