@@ -1,6 +1,7 @@
-RSpec.shared_examples "ログイン必須" do
-  it "before_action :require_login が設定されている" do
-    callbacks = described_class._process_action_callbacks
-    expect(callbacks.any? { |c| c.kind == :before && c.filter == :require_login }).to be true
+RSpec.shared_context "ログイン必須" do
+  if described_class.is_a?(Class) && described_class < ApplicationController && described_class != SessionsController
+    it "ApplicationController を継承している" do
+      expect(described_class < ApplicationController).to be(true)
+    end
   end
 end

@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe ApplicationController, type: :request do
-  let(:user) { create(:user) }
-
   describe "#require_login" do
     context "未ログイン状態でアクセスしたとき" do
       it "ログイン画面にリダイレクトする" do
@@ -12,7 +10,7 @@ RSpec.describe ApplicationController, type: :request do
     end
 
     context "ログイン済みのとき" do
-      before { post login_path, params: { email: user.email, password: "password" } }
+      login
 
       it "リダイレクトしない" do
         get photos_path
@@ -23,7 +21,7 @@ RSpec.describe ApplicationController, type: :request do
 
   describe "#current_user" do
     context "ログイン後にセッションが有効なとき" do
-      before { post login_path, params: { email: user.email, password: "password" } }
+      login
 
       it "リクエスト間でユーザーが維持される" do
         get photos_path
@@ -32,10 +30,8 @@ RSpec.describe ApplicationController, type: :request do
     end
 
     context "ログイン後にユーザーが削除されたとき" do
-      before do
-        post login_path, params: { email: user.email, password: "password" }
-        user.destroy
-      end
+      login
+      before { user.destroy }
 
       it "ログイン画面にリダイレクトする" do
         get photos_path

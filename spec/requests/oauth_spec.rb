@@ -1,13 +1,9 @@
 require "rails_helper"
 
 RSpec.describe OauthController, type: :request do
-  it_behaves_like "ログイン必須"
+  login
 
   describe "GET /oauth/authorize" do
-    let(:user) { create(:user) }
-
-    before { post "/login", params: { email: user.email, password: "password" } }
-
     it "外部OAuth認可URLへリダイレクトする" do
       get oauth_authorize_path
       expect(response).to redirect_to(/oauth\/authorize/)
@@ -18,10 +14,6 @@ RSpec.describe OauthController, type: :request do
   end
 
   describe "GET /oauth/callback" do
-    let(:user) { create(:user) }
-
-    before { post "/login", params: { email: user.email, password: "password" } }
-
     context "認可コードがある場合" do
       let(:access_token) { "test_access_token_xyz" }
 
