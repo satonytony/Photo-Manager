@@ -1,7 +1,7 @@
 <h1>写真アップロード</h1>
 
 <% if @photo&.errors&.any? %>
-  <ul>
+  <ul class="error-messages">
     <% @photo.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
     <% end %>
