@@ -5,8 +5,8 @@ class SessionsController < ApplicationController
   def create
     @email = params[:email].to_s.strip
     errors = []
-    errors << "メールアドレスを入力してください" if @email.blank?
-    errors << "パスワードを入力してください"     if params[:password].blank?
+    errors << t("sessions.errors.email_blank")    if @email.blank?
+    errors << t("sessions.errors.password_blank")  if params[:password].blank?
 
     if errors.empty?
       user = User.find_by(email: @email.downcase)
@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
         redirect_to photos_path
         return
       end
-      errors << "メールアドレスとパスワードが一致するユーザーが存在しません"
+      errors << t("sessions.errors.invalid_credentials")
     end
 
     @errors = errors

@@ -1,0 +1,24 @@
+<h1>写真アップロード</h1>
+
+<% if @photo&.errors&.any? %>
+  <ul>
+    <% @photo.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= form_with url: photos_path, scope: :photo do |f| %>
+  <div>
+    <%= f.label :title, "タイトル" %>
+    <%= f.text_field :title %>
+  </div>
+  <div>
+    <%= f.label :image, "画像ファイル" %>
+    <%= f.file_field :image %>
+  </div>
+  <%= f.submit "アップロード" %>
+<% end %>
+
+<%= link_to "キャンセル", photos_path %>
+<%= button_to "ログアウト", "/logout", method: :delete %>
