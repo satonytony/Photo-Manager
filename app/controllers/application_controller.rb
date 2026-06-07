@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :require_login
 
   rescue_from MyTweetApiClient::Error, with: :handle_my_tweet_api_error
+  rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
 
   helper_method :current_user, :logged_in?
 
@@ -10,6 +11,11 @@ class ApplicationController < ActionController::Base
 
   def handle_my_tweet_api_error
     # TODO: 通信エラーが起きたことをユーザーに伝える必要がある
+    redirect_to photos_path
+  end
+
+  def handle_record_not_found
+    # TODO: 対象が見つからなかったことをユーザーに伝える必要がある
     redirect_to photos_path
   end
 

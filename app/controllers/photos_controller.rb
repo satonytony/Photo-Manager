@@ -1,6 +1,6 @@
 class PhotosController < ApplicationController
   def index
-    @photos = current_user.photos.order(created_at: :desc)
+    @photos = current_user.photos.with_attached_image.order(created_at: :desc)
   end
 
   def new

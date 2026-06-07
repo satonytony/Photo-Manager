@@ -13,7 +13,10 @@ class MyTweetApiClient
         client_secret: MY_TWEET[:client_secret],
         redirect_uri:  MY_TWEET[:redirect_uri]
       })
-      JSON.parse(res.body)["access_token"] if res.is_a?(Net::HTTPSuccess)
+
+      raise Error, "トークン取得に失敗しました (HTTP #{res.code})" unless res.is_a?(Net::HTTPSuccess)
+
+      JSON.parse(res.body)["access_token"]
     end
   end
 
@@ -25,7 +28,8 @@ class MyTweetApiClient
       req["Authorization"] = "Bearer #{access_token}"
       req.body = { text: text, url: url }.to_json
       res = Net::HTTP.start(uri.hostname, uri.port) { |http| http.request(req) }
-      res.is_a?(Net::HTTPCreated)
+
+      raise Error, "ツイート投稿に失敗しました (HTTP #{res.code})" unless res.is_a?(Net::HTTPCreated)
     end
   end
 
