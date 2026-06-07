@@ -1,4 +1,5 @@
 class OauthController < ApplicationController
+  include MyTweetApiClient
   before_action :require_login
 
   def authorize
@@ -12,6 +13,11 @@ class OauthController < ApplicationController
   end
 
   def callback
-    # 要件6で実装
+    code = params[:code]
+    if code.present?
+      token = fetch_access_token(code)
+      session[:access_token] = token if token
+    end
+    redirect_to photos_path
   end
 end
