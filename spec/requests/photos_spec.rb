@@ -94,7 +94,7 @@ RSpec.describe PhotosController, type: :request do
     end
 
     context "ツイートAPIが失敗する（500系）とき" do
-      before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_return(false) }
+      before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_raise(MyTweetApiClient::Error) }
 
       it "写真一覧にリダイレクトする" do
         post tweet_photo_path(photo)
@@ -107,6 +107,22 @@ RSpec.describe PhotosController, type: :request do
 
       it "写真一覧にリダイレクトする" do
         post tweet_photo_path(photo)
+        expect(response).to redirect_to(photos_path)
+      end
+    end
+
+    context "存在しない写真IDを指定したとき" do
+      it "500にならず写真一覧へリダイレクトする" do
+        post tweet_photo_path(id: 0)
+        expect(response).to redirect_to(photos_path)
+      end
+    end
+
+    context "他ユーザーの写真IDを指定したとき" do
+      it "写真一覧へリダイレクトしツイートしない" do
+        other_photo = create(:photo, :with_image, user: create(:user))
+        expect_any_instance_of(MyTweetApiClient).not_to receive(:post_tweet)
+        post tweet_photo_path(other_photo)
         expect(response).to redirect_to(photos_path)
       end
     end

@@ -37,7 +37,7 @@ end
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include LoginHelper, type: :request
-  config.include_context "ApplicationController継承確認", type: :request
+  config.include_context "ログイン必須の担保", type: :request
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [

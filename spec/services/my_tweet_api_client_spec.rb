@@ -21,11 +21,12 @@ RSpec.describe MyTweetApiClient do
       before do
         fake_res = double("error_response")
         allow(fake_res).to receive(:is_a?).with(Net::HTTPSuccess).and_return(false)
+        allow(fake_res).to receive(:code).and_return("500")
         allow(Net::HTTP).to receive(:post_form).and_return(fake_res)
       end
 
-      it "nil を返す" do
-        expect(instance.fetch_access_token("code_abc")).to be_nil
+      it "MyTweetApiClient::Error を raise する" do
+        expect { instance.fetch_access_token("code_abc") }.to raise_error(MyTweetApiClient::Error)
       end
     end
 
@@ -46,8 +47,8 @@ RSpec.describe MyTweetApiClient do
         allow_any_instance_of(Net::HTTP).to receive(:request).and_return(fake_res)
       end
 
-      it "true を返す" do
-        expect(instance.post_tweet("token_xyz", "タイトル", "http://localhost:3000/photos/1.jpg")).to be true
+      it "エラーを raise しない" do
+        expect { instance.post_tweet("token_xyz", "タイトル", "http://localhost:3000/photos/1.jpg") }.not_to raise_error
       end
     end
 
@@ -55,11 +56,12 @@ RSpec.describe MyTweetApiClient do
       before do
         fake_res = double("error_response")
         allow(fake_res).to receive(:is_a?).with(Net::HTTPCreated).and_return(false)
+        allow(fake_res).to receive(:code).and_return("500")
         allow_any_instance_of(Net::HTTP).to receive(:request).and_return(fake_res)
       end
 
-      it "false を返す" do
-        expect(instance.post_tweet("token_xyz", "タイトル", "http://localhost:3000/photos/1.jpg")).to be false
+      it "MyTweetApiClient::Error を raise する" do
+        expect { instance.post_tweet("token_xyz", "タイトル", "http://localhost:3000/photos/1.jpg") }.to raise_error(MyTweetApiClient::Error)
       end
     end
 
