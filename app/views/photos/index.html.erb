@@ -1,7 +1,7 @@
 <h1>写真一覧</h1>
 
 <%= link_to "写真をアップロード", "/photos/new" %>
-<%= button_to "ログアウト", "/logout", method: :delete %>
+<%= button_to "ログアウト", logout_path, method: :delete %>
 
 <% @photos.each do |photo| %>
   <div>
