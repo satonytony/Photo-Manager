@@ -21,7 +21,8 @@ class PhotosController < ApplicationController
     api_client.post_tweet(session[:access_token], @photo.title, image_url)
     redirect_to photos_path
   rescue MyTweetApiClient::Error
-    redirect_to photos_path, alert: t("my_tweet.errors.post_tweet_failed")
+    # TODO: 素のエラーをそのまま出さないよう、ユーザー向けの適切なエラー表示に変換する必要がある
+    raise
   end
 
   private

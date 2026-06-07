@@ -105,14 +105,8 @@ RSpec.describe PhotosController, type: :request do
     context "ネットワークエラーでツイートが失敗するとき" do
       before { allow_any_instance_of(MyTweetApiClient).to receive(:post_tweet).and_raise(MyTweetApiClient::Error) }
 
-      it "写真一覧にリダイレクトする" do
-        post tweet_photo_path(photo)
-        expect(response).to redirect_to(photos_path)
-      end
-
-      it "エラーメッセージをflashにセットする" do
-        post tweet_photo_path(photo)
-        expect(flash[:alert]).to be_present
+      it "MyTweetApiClient::Error が raise される" do
+        expect { post tweet_photo_path(photo) }.to raise_error(MyTweetApiClient::Error)
       end
     end
   end

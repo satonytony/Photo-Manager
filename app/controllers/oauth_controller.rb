@@ -17,7 +17,8 @@ class OauthController < ApplicationController
     end
     redirect_to photos_path
   rescue MyTweetApiClient::Error
-    redirect_to photos_path, alert: t("my_tweet.errors.fetch_token_failed")
+    # TODO: 素のエラーをそのまま出さないよう、ユーザー向けの適切なエラー表示に変換する必要がある
+    raise
   end
 
   private
