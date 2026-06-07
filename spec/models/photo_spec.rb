@@ -4,7 +4,7 @@ RSpec.describe Photo, type: :model do
   describe 'バリデーション' do
     context 'titleが空のとき' do
       it '無効である' do
-        photo = build(:photo, title: '')
+        photo = build(:photo, :with_image, title: '')
         expect(photo).not_to be_valid
         expect(photo.errors[:title]).to be_present
       end
@@ -12,22 +12,30 @@ RSpec.describe Photo, type: :model do
 
     context 'titleが30文字のとき' do
       it '有効である' do
-        photo = build(:photo, title: 'a' * 30)
+        photo = build(:photo, :with_image, title: 'a' * 30)
         expect(photo).to be_valid
       end
     end
 
     context 'titleが31文字のとき' do
       it '無効である' do
-        photo = build(:photo, title: 'a' * 31)
+        photo = build(:photo, :with_image, title: 'a' * 31)
         expect(photo).not_to be_valid
         expect(photo.errors[:title]).to be_present
       end
     end
 
+    context 'imageが添付されていないとき' do
+      it '無効である' do
+        photo = build(:photo)
+        expect(photo).not_to be_valid
+        expect(photo.errors[:image]).to be_present
+      end
+    end
+
     context '全属性が正しいとき' do
       it '有効である' do
-        photo = build(:photo)
+        photo = build(:photo, :with_image)
         expect(photo).to be_valid
       end
     end

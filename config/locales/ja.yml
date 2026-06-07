@@ -1,0 +1,20 @@
+ja:
+  activerecord:
+    models:
+      photo: 写真
+    attributes:
+      photo:
+        title: タイトル
+        image: 画像ファイル
+    errors:
+      models:
+        photo:
+          attributes:
+            image:
+              blank: を選択してください
+
+  sessions:
+    errors:
+      email_blank: メールアドレスを入力してください
+      password_blank: パスワードを入力してください
+      invalid_credentials: メールアドレスとパスワードが一致するユーザーが存在しません
