@@ -1,0 +1,17 @@
+default: &default
+  authorize_url: <%= ENV.fetch("MY_TWEET_AUTHORIZE_URL") %>
+  token_url:     <%= ENV.fetch("MY_TWEET_TOKEN_URL") %>
+  api_url:       <%= ENV.fetch("MY_TWEET_API_URL") %>
+  redirect_uri:  <%= ENV.fetch("MY_TWEET_REDIRECT_URI", "http://localhost:3000/oauth/callback") %>
+  scope:         <%= ENV.fetch("MY_TWEET_SCOPE") %>
+  client_id:     <%= ENV.fetch("MY_TWEET_CLIENT_ID") %>
+  client_secret: <%= ENV.fetch("MY_TWEET_CLIENT_SECRET") %>
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default

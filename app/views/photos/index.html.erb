@@ -2,6 +2,9 @@
 
 <div class="photos-toolbar">
   <%= link_to "写真をアップロード", new_photo_path %>
+  <% unless session[:access_token].present? %>
+    <%= link_to "MyTweetと連携する", oauth_authorize_path %>
+  <% end %>
   <%= button_to "ログアウト", logout_path, method: :delete %>
 </div>
 
