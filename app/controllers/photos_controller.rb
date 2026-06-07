@@ -17,6 +17,13 @@ class PhotosController < ApplicationController
 
   def tweet
     @photo = current_user.photos.find(params[:id])
+
+    if session[:access_token].blank?
+      # TODO: MyTweet未連携であることをユーザーに伝える
+      redirect_to photos_path
+      return
+    end
+
     image_url = rails_blob_url(@photo.image, host: request.base_url)
     api_client.post_tweet(session[:access_token], @photo.title, image_url)
     redirect_to photos_path
