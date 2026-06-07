@@ -9,6 +9,25 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  z-index: 1000;
+}
+
+.site-main {
+  margin-top: 48px;
+  padding: 24px;
+}
+
 .error-messages {
   color: red;
 }
