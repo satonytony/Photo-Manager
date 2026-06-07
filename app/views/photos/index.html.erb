@@ -5,7 +5,6 @@
   <% unless session[:access_token].present? %>
     <%= link_to "MyTweetと連携する", oauth_authorize_path %>
   <% end %>
-  <%= button_to "ログアウト", logout_path, method: :delete %>
 </div>
 
 <div class="photos-grid">
